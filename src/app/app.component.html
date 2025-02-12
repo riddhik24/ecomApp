@@ -1,0 +1,178 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary" style="background-color: #6262e1 !important;">
+  <!-- Container wrapper -->
+  <div class="container-fluid">
+      <!-- Toggle button -->
+      <button data-mdb-collapse-init class="navbar-toggler" type="button"
+          data-mdb-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+          aria-label="Toggle navigation">
+          <i class="fa fa-bars"></i>
+      </button>
+
+      <!-- Collapsible wrapper -->
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <!-- Navbar brand -->
+          <a class="navbar-brand mt-2 mt-lg-0" href="#">
+              E-commerce App
+          </a>
+          <!-- Left links -->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                  <a class="nav-link" href="#">Dashboard</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="#">Team</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="#">Projects</a>
+              </li>
+          </ul>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle redHover fw-semibold text-uppercase text-black  me-1"
+                 id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <i class="fa fa-user fs-5 me-1" style="color: #202122;"></i>
+            </a>
+            <ul class="dropdown-menu" style="left:-50px" aria-labelledby="navbarDropdown">
+                <li>
+                    <div class="d-flex justify-content-evenly mt-2">
+                        <a href="#" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                            aria-controls="offcanvasRight"> <button
+                                class="btn btn-danger rounded-0 px-3">Login</button></a>
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"> <button
+                                class="btn btn-danger rounded-0 px-3">Register</button></a>
+                    </div>
+                </li>
+            </ul>
+        </li>
+          <!-- Left links -->
+      </div>
+      <!-- Collapsible wrapper -->
+
+      <!-- Right elements -->
+      <div class="d-flex align-items-center">
+          <!-- Icon -->
+           @if(loggedUserData.custId == 0){
+           <button class="btn btn-success btn-sm" (click)="openLoginModel()">Login</button>
+           <button class="btn btn-success btn-sm mx-2" (click)="openRegisterModel()">Register</button>
+           }@else{
+            <button class="btn btn-primary btn-sm">{{loggedUserData.name}}</button>
+            <button class="btn btn-success btn-sm mx-2" (click)="logOff()">LogOff</button>
+           }
+          <a class="link-secondary me-3" href="#">
+              <i class="fa fa-shopping-cart text-white"(click)="showCartPopup()"></i>
+          </a>
+          <div [className]="isCartPopupOpen ? 'dropdown-menu dropdown-menu-end show': 'dropdown-menu dropdown-menu-end hide'" class="" style="position: absolute;
+          right: 13px;top:60px" aria-labelledby="navbarDropdownMenuAvatar">
+              <div class="row">
+                  <div class="col-8">
+                      <h6>Cart Items</h6>
+                  </div>
+                  <div class="col-4 text-end">
+                      <i class="fa fa-close p-2" (click)="showCartPopup()"></i>
+                  </div>
+              </div>
+
+
+              <table class="table table-sm">
+                  <tbody>
+                    @for (item of cartData; track $index) {
+                        <tr>
+                            <td>
+                                <div class="rounded"
+                                    style="background-image: url({{item.productImageUrl}}); width: 60px; height: 60px; background-size: cover;">
+                                </div>
+                            </td>
+                            <td class="align-middle text-left">{{item.productName}}</td>
+                            <td class="align-middle text-center">{{item.quantity}} pieces</td>
+                            <td class="align-middle text-right">${{item.productPrice}}</td>
+                            <td class="align-middle text-center">
+                                <a (click)="onRemoveProduct(item.cartId)" data-toggle="modal" data-title="Delete your product ?">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                  </tbody>
+              </table>
+              <div class="row">
+                <div class="col-12 text-end">
+                    <button class="btn btn-sm btn-primary" (click)="isCartPopupOpen = false" [routerLink]="['/create-order']">CheckOut</button>
+                </div>
+            </div>
+          </div>
+      </div>
+  </div>
+</nav>
+<router-outlet />
+
+<div class="modal" id="myModal" #loginModel>
+    <div class="modal-dialog">
+      <div class="modal-content">
+  
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Login</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="closeLoginModel()"></button>
+        </div>
+  
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12">
+                <label for="">Name</label>
+                <input type="text" [(ngModel)] = "loginObj.UserName" class="form-control">
+            </div>
+            <div class="col-12">
+                <label for="">Mobile No</label>
+                <input type="text" [(ngModel)] = "loginObj.UserPassword" class="form-control">
+            </div>
+          </div>
+        </div>
+  
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="closeLoginModel()">Close</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="onLogin()">Login</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+<div class="modal" id="myModal" #registerModel>
+    <div class="modal-dialog">
+      <div class="modal-content">
+  
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Register</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="closeRegisterModel()"></button>
+        </div>
+  
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12">
+                <label for="">Name</label>
+                <input type="text" [(ngModel)] = "registerObj.name" class="form-control">
+            </div>
+            <div class="col-12">
+                <label for="">Mobile No</label>
+                <input type="text" [(ngModel)] = "registerObj.MobileNo" class="form-control">
+            </div>
+            <div class="col-12">
+                <label for="">Password</label>
+                <input type="text" [(ngModel)] = "registerObj.Password" class="form-control">
+            </div>
+          </div>
+        </div>
+  
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="closeRegisterModel()">Close</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="onRegister()">Register</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
